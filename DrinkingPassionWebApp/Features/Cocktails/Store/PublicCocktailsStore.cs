@@ -10,7 +10,7 @@ public record PublicCocktailsState
     public bool IsLoading { get; init; }
     public bool IsError { get; init; }
     public string ErrorMessage { get; init; } = string.Empty;
-    public IReadOnlyList<CocktailDto> Cocktails { get; init; } = Array.Empty<CocktailDto>();
+    public Pagination<CocktailDto>? PaginatedCocktails { get; init; }
 }
 
 public class PublicCocktailsFeature : Feature<PublicCocktailsState>
@@ -22,7 +22,7 @@ public class PublicCocktailsFeature : Feature<PublicCocktailsState>
         {
             IsLoading = false,
             IsError = false,
-            Cocktails = Array.Empty<CocktailDto>()
+            PaginatedCocktails = null
         };
 }
 
@@ -40,7 +40,7 @@ public static class PublicCocktailsReducers
         state with
         {
             IsLoading = false,
-            Cocktails = action.Cocktails
+            PaginatedCocktails = action.PaginatedCocktails
         };
 
     [ReducerMethod]
@@ -63,12 +63,11 @@ public class PublicCocktailsEffects
     [EffectMethod]
     public async Task HandleFetchPublicCocktailsAction(FetchPublicCocktailsAction _, IDispatcher dispatcher)
     {
-
         try
         {
-            var cocktails = await _httpClient.GetFromJsonAsync<Pagination<CocktailDto>>("https://localhost:5001/api/cocktails/public");
+            var paginatedCocktails = await _httpClient.GetFromJsonAsync<Pagination<CocktailDto>>("https://localhost:5001/api/cocktails/public");
 
-            dispatcher.Dispatch(new FetchPublicCocktailsSuccessAction(cocktails.Data));
+            dispatcher.Dispatch(new FetchPublicCocktailsSuccessAction(paginatedCocktails));
         }
         catch (Exception e)
         {
@@ -78,5 +77,5 @@ public class PublicCocktailsEffects
 }
 
 public record FetchPublicCocktailsAction();
-public record FetchPublicCocktailsSuccessAction(IReadOnlyList<CocktailDto> Cocktails);
+public record FetchPublicCocktailsSuccessAction(Pagination<CocktailDto> PaginatedCocktails);
 public record FetchPublicCocktailsFailureAction(string ErrorMessage);
