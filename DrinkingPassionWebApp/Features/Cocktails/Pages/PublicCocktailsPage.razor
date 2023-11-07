@@ -38,7 +38,7 @@ else
                                 <MudCardActions>
                                     <MudButton Variant="Variant.Text"
                                                Color="Color.Primary"
-                                               OnClick="(() => NavitateToCocktailDetails(cocktail.Id))">
+                                               OnClick="(() => NavigateToCocktailDetails(cocktail.Id))">
                                         Szczegóły
                                     </MudButton>
                                 </MudCardActions>
@@ -51,7 +51,8 @@ else
             {
                 <MudPagination Selected="@(PublicCocktailsState.Value.PaginatedCocktails!.PageIndex)"
                                Count="PagesCount"
-                               Class="align-self-center" />
+                               Class="align-self-center"
+                               SelectedChanged="((pageIndex) => GoToPage(pageIndex))" />
             }
         </MudContainer>
     }
@@ -61,19 +62,24 @@ else
     public int PagesCount =>
         PublicCocktailsState.Value.PaginatedCocktails!.Count / PublicCocktailsState.Value.PaginatedCocktails!.PageSize;
 
-    public int CurrentlySelectedPage { get; set; }
+    public int PageIndex => PublicCocktailsState.Value.PaginatedCocktails!.PageIndex;
 
     protected override void OnInitialized()
     {
-        if (!PublicCocktailsState.Value.IsLoading)
+        if (!PublicCocktailsState.Value.IsInitialized)
         {
-            Dispatcher.Dispatch(new FetchPublicCocktailsAction());
+            Dispatcher.Dispatch(new FetchPublicCocktailsAction(1));
         }
 
         base.OnInitialized();
     }
 
-    private void NavitateToCocktailDetails(int id)
+    private void GoToPage(int pageIndex)
+    {
+        Dispatcher.Dispatch(new FetchPublicCocktailsAction(pageIndex));
+    }
+
+    private void NavigateToCocktailDetails(int id)
     {
         Navigation.NavigateTo($"/cocktails/{id}");
     }

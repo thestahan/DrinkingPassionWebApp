@@ -1,7 +1,7 @@
 ﻿using DrinkingPassionWebApp.Features.Cocktails.Dtos;
+using DrinkingPassionWebApp.Services;
 using DrinkingPassionWebApp.Shared;
 using Fluxor;
-using System.Net.Http.Json;
 
 namespace DrinkingPassionWebApp.Features.Cocktails.Store;
 
@@ -59,17 +59,17 @@ public static class PublicCocktailsReducers
 
 public class PublicCocktailsEffects
 {
-    private readonly HttpClient _httpClient;
+    private readonly ICocktailsService _cocktailsService;
 
-    public PublicCocktailsEffects(HttpClient httpClient) =>
-        _httpClient = httpClient;
+    public PublicCocktailsEffects(ICocktailsService cocktailsService) =>
+        _cocktailsService = cocktailsService;
 
     [EffectMethod]
-    public async Task HandleFetchPublicCocktailsAction(FetchPublicCocktailsAction _, IDispatcher dispatcher)
+    public async Task HandleFetchPublicCocktailsAction(FetchPublicCocktailsAction action, IDispatcher dispatcher)
     {
         try
         {
-            var paginatedCocktails = await _httpClient.GetFromJsonAsync<Pagination<CocktailDto>>("https://localhost:5001/api/cocktails/public");
+            var paginatedCocktails = await _cocktailsService.GetPublicCocktailsAsync(action.PageIndex);
 
             dispatcher.Dispatch(new FetchPublicCocktailsSuccessAction(paginatedCocktails!));
         }
@@ -80,6 +80,6 @@ public class PublicCocktailsEffects
     }
 }
 
-public record FetchPublicCocktailsAction();
+public record FetchPublicCocktailsAction(int PageIndex);
 public record FetchPublicCocktailsSuccessAction(Pagination<CocktailDto> PaginatedCocktails);
 public record FetchPublicCocktailsFailureAction(string ErrorMessage);
