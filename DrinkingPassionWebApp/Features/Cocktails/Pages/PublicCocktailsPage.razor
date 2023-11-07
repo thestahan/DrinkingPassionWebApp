@@ -62,8 +62,6 @@ else
     public int PagesCount =>
         PublicCocktailsState.Value.PaginatedCocktails!.Count / PublicCocktailsState.Value.PaginatedCocktails!.PageSize;
 
-    public int PageIndex => PublicCocktailsState.Value.PaginatedCocktails!.PageIndex;
-
     protected override void OnInitialized()
     {
         if (!PublicCocktailsState.Value.IsInitialized)
