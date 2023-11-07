@@ -4,6 +4,7 @@
 
 @inject IDispatcher Dispatcher
 @inject IState<PublicCocktailsState> PublicCocktailsState
+@inject NavigationManager Navigation
 
 <MudText Typo="Typo.h4" Align="Align.Center" Class="py-2">
     Koktajle
@@ -20,7 +21,7 @@ else
         <p><em>Something went wrong!</em></p>
         <p>@PublicCocktailsState.Value.ErrorMessage</p>
     }
-    else
+    else if (PublicCocktailsState.Value.IsInitialized)
     {
         <MudContainer Class="d-flex flex-column flex-grow-1 gap-4 py-2">
             <MudGrid>
@@ -35,7 +36,11 @@ else
                                     <MudText Typo="Typo.body2">Liczba składników: @cocktail.IngredientsCount</MudText>
                                 </MudCardContent>
                                 <MudCardActions>
-                                    <MudButton Variant="Variant.Text" Color="Color.Primary">Szczegóły</MudButton>
+                                    <MudButton Variant="Variant.Text"
+                                               Color="Color.Primary"
+                                               OnClick="(() => NavitateToCocktailDetails(cocktail.Id))">
+                                        Szczegóły
+                                    </MudButton>
                                 </MudCardActions>
                             </MudCard>
                         </MudItem>
@@ -56,6 +61,8 @@ else
     public int PagesCount =>
         PublicCocktailsState.Value.PaginatedCocktails!.Count / PublicCocktailsState.Value.PaginatedCocktails!.PageSize;
 
+    public int CurrentlySelectedPage { get; set; }
+
     protected override void OnInitialized()
     {
         if (!PublicCocktailsState.Value.IsLoading)
@@ -64,5 +71,10 @@ else
         }
 
         base.OnInitialized();
+    }
+
+    private void NavitateToCocktailDetails(int id)
+    {
+        Navigation.NavigateTo($"/cocktails/{id}");
     }
 }

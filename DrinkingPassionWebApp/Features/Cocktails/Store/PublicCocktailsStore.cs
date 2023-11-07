@@ -7,6 +7,7 @@ namespace DrinkingPassionWebApp.Features.Cocktails.Store;
 
 public record PublicCocktailsState
 {
+    public bool IsInitialized { get; init; }
     public bool IsLoading { get; init; }
     public bool IsError { get; init; }
     public string ErrorMessage { get; init; } = string.Empty;
@@ -20,6 +21,7 @@ public class PublicCocktailsFeature : Feature<PublicCocktailsState>
     protected override PublicCocktailsState GetInitialState() =>
         new()
         {
+            IsInitialized = false,
             IsLoading = false,
             IsError = false,
             PaginatedCocktails = null
@@ -39,6 +41,7 @@ public static class PublicCocktailsReducers
     public static PublicCocktailsState OnFetchPublicCocktailsSuccess(PublicCocktailsState state, FetchPublicCocktailsSuccessAction action) =>
         state with
         {
+            IsInitialized = true,
             IsLoading = false,
             PaginatedCocktails = action.PaginatedCocktails
         };
@@ -47,6 +50,7 @@ public static class PublicCocktailsReducers
     public static PublicCocktailsState OnFetchPublicCocktailsFailure(PublicCocktailsState state, FetchPublicCocktailsFailureAction action) =>
         state with
         {
+            IsInitialized = true,
             IsLoading = false,
             IsError = true,
             ErrorMessage = action.ErrorMessage
@@ -67,7 +71,7 @@ public class PublicCocktailsEffects
         {
             var paginatedCocktails = await _httpClient.GetFromJsonAsync<Pagination<CocktailDto>>("https://localhost:5001/api/cocktails/public");
 
-            dispatcher.Dispatch(new FetchPublicCocktailsSuccessAction(paginatedCocktails));
+            dispatcher.Dispatch(new FetchPublicCocktailsSuccessAction(paginatedCocktails!));
         }
         catch (Exception e)
         {
