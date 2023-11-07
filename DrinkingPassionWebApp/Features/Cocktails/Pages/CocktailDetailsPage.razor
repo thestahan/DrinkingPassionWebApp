@@ -1,0 +1,51 @@
+﻿@page "/cocktails/{Id:int}"
+@using DrinkingPassionWebApp.Features.Cocktails.Store
+
+@inherits FluxorComponent
+
+@inject IDispatcher Dispatcher
+@inject IState<CocktailDetailsState> CocktailDetailsState
+
+@if (CocktailDetailsState.Value.IsLoading)
+{
+    <MudOverlay Visible="true" DarkBackground="true">
+        <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+    </MudOverlay>
+}
+else
+{
+    if (CocktailDetailsState.Value.IsError)
+    {
+        <p><em>Something went wrong!</em></p>
+        <p>@CocktailDetailsState.Value.ErrorMessage</p>
+    }
+    else if (CocktailDetailsState.Value.IsInitialized)
+    {
+        <MudContainer Class="d-flex flex-column flex-grow-1 gap-4 py-2">
+            <MudText Typo="Typo.h3" Color="Color.Primary">@Cocktail.Name</MudText>
+            @foreach (var ingredient in Cocktail.Ingredients)
+            {
+                <MudText>
+                    <MudText Color="Color.Secondary">@ingredient.Name</MudText> - @ingredient.Amount @ingredient.Unit
+                </MudText>
+            }
+        </MudContainer>
+    }
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public Dtos.CocktailDetails Cocktail => CocktailDetailsState.Value.CocktailDetails!;
+
+    protected override void OnInitialized()
+    {
+        if (!CocktailDetailsState.Value.IsLoading)
+        {
+            Dispatcher.Dispatch(new FetchCocktailDetailsAction(Id));
+        }
+
+        base.OnInitialized();
+    }
+}
