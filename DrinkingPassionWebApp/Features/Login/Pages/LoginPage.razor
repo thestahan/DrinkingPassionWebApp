@@ -1,0 +1,11 @@
+﻿@page "/login"
+@using DrinkingPassionWebApp.Features.Login.Store
+
+@inject IDispatcher Dispatcher
+@inject IState<LoginState> LoginState
+
+<MudForm>
+    <MudTextField T="string" Label="Adres email" />
+    <MudTextField T="string" Label="Hasło" InputType="InputType.Password" />
+    <MudButton Variant="Variant.Filled" Color="Color.Primary">Zaloguj się</MudButton>
+</MudForm>

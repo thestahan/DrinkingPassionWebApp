@@ -1,5 +1,5 @@
 ﻿using DrinkingPassionWebApp.Features.Cocktails.Dtos;
-using DrinkingPassionWebApp.Services;
+using DrinkingPassionWebApp.Services.Interfaces;
 using DrinkingPassionWebApp.Shared;
 using Fluxor;
 

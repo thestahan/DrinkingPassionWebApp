@@ -1,5 +1,6 @@
 using DrinkingPassionWebApp;
 using DrinkingPassionWebApp.Services;
+using DrinkingPassionWebApp.Services.Interfaces;
 using Fluxor;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

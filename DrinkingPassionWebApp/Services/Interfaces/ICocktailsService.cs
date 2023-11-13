@@ -1,7 +1,7 @@
 ﻿using DrinkingPassionWebApp.Features.Cocktails.Dtos;
 using DrinkingPassionWebApp.Shared;
 
-namespace DrinkingPassionWebApp.Services;
+namespace DrinkingPassionWebApp.Services.Interfaces;
 
 public interface ICocktailsService
 {

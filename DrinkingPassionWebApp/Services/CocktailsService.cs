@@ -1,4 +1,5 @@
 ﻿using DrinkingPassionWebApp.Features.Cocktails.Dtos;
+using DrinkingPassionWebApp.Services.Interfaces;
 using DrinkingPassionWebApp.Shared;
 using System.Net.Http.Json;
 
