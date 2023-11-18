@@ -10,7 +10,7 @@ public record LoginState
     public bool IsSaving { get; init; }
     public bool IsError { get; init; }
     public string? ErrorMessage { get; init; }
-    public LoginDto? LoginDto { get; set; }
+    public LoginDto LoginDto { get; set; } = default!;
 }
 
 public class LoginFeature : Feature<LoginState>
@@ -23,7 +23,7 @@ public class LoginFeature : Feature<LoginState>
             IsSaving = false,
             IsError = false,
             ErrorMessage = null,
-            LoginDto = null,
+            LoginDto = new LoginDto(),
         };
 }
 

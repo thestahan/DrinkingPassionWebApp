@@ -1,0 +1,8 @@
+﻿@using DrinkingPassionWebApp.Features.Global
+
+@inject IState<UserState> UserState
+
+@if (UserState.Value.IsLoggedIn)
+{
+    <MudAvatar Color="Color.Primary">@(UserState.Value.DisplayName.First())</MudAvatar>
+} 
