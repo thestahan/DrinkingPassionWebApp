@@ -46,7 +46,15 @@ public static class UserReducers
 
     [ReducerMethod]
     public static UserState UserUserLogout(UserState state, UserLogoutAction _) =>
-        state with { };
+        state with
+        {
+            Email = null,
+            DisplayName = null,
+            Token = null,
+            TokenExpiration = null,
+            IsLoggedIn = false,
+            Roles = new List<string>()
+        };
 }
 
 public record UserLogoutAction();

@@ -1,4 +1,5 @@
-﻿using DrinkingPassionWebApp.Features.Login.Dtos;
+﻿using DrinkingPassionWebApp.Features.Global;
+using DrinkingPassionWebApp.Features.Login.Dtos;
 using DrinkingPassionWebApp.Features.Login.Store;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
@@ -11,6 +12,9 @@ public partial class LoginPage : FluxorComponent
 {
     [Inject]
     public IState<LoginState> LoginState { get; set; } = default!;
+
+    [Inject]
+    public IState<UserState> UserState { get; set; } = default!;
 
     [Inject]
     public IDispatcher Dispatcher { get; set; } = default!;
