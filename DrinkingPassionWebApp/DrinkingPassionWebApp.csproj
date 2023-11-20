@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.4.0" />
     <PackageReference Include="Fluxor.Blazor.Web" Version="5.9.1" />
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.13" />
@@ -14,6 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.13" PrivateAssets="all" />
     <PackageReference Include="MudBlazor" Version="6.11.0" />
     <PackageReference Include="OneOf" Version="3.0.263" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
   </ItemGroup>
 
 </Project>

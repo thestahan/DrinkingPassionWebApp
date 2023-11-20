@@ -1,4 +1,4 @@
-﻿using DrinkingPassionWebApp.Features.Global;
+﻿using DrinkingPassionWebApp.Features.Auth;
 using DrinkingPassionWebApp.Features.Login.Dtos;
 using DrinkingPassionWebApp.Features.Login.Store;
 using Fluxor;

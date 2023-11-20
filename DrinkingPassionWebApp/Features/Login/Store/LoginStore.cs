@@ -1,5 +1,5 @@
-﻿using DrinkingPassionWebApp.Features.Login.Dtos;
-using DrinkingPassionWebApp.Services.Interfaces;
+﻿using DrinkingPassionWebApp.Features.Auth;
+using DrinkingPassionWebApp.Features.Login.Dtos;
 using DrinkingPassionWebApp.Shared;
 using Fluxor;
 
@@ -7,7 +7,7 @@ namespace DrinkingPassionWebApp.Features.Login.Store;
 
 public record LoginState
 {
-    public bool IsSaving { get; init; }
+    public bool IsSending { get; init; }
     public bool IsError { get; init; }
     public string? ErrorMessage { get; init; }
     public LoginDto LoginDto { get; set; } = default!;
@@ -20,7 +20,7 @@ public class LoginFeature : Feature<LoginState>
     protected override LoginState GetInitialState() =>
         new()
         {
-            IsSaving = false,
+            IsSending = false,
             IsError = false,
             ErrorMessage = null,
             LoginDto = new LoginDto(),
@@ -33,7 +33,7 @@ public static class LoginReducers
     public static LoginState OnLoginSuccess(LoginState state, LoginSuccessAction _) =>
         state with
         {
-            IsSaving = false,
+            IsSending = false,
             IsError = false
         };
 
@@ -41,39 +41,46 @@ public static class LoginReducers
     public static LoginState OnLoginFailure(LoginState state, LoginFailureAction action) =>
         state with
         {
-            IsSaving = false,
+            IsSending = false,
             IsError = true,
             ErrorMessage = action.ApiErrorResponse.Message
         };
 
     [ReducerMethod]
-    public static LoginState OnLoginSubmit(LoginState state, LoginSubmitAction action) =>
+    public static LoginState OnLoginSubmit(LoginState state, LoginSubmitAction _) =>
         state with
         {
-            IsSaving = true
+            IsSending = true
         };
 }
 
 public class LoginEffects
 {
-    private readonly IUsersService _usersService;
+    private readonly DrinkingPassionAuthenticationStateProvider _authenticationStateProvider;
 
-    public LoginEffects(IUsersService usersService)
+    public LoginEffects(DrinkingPassionAuthenticationStateProvider authenticationStateProvider)
     {
-        _usersService = usersService;
+        _authenticationStateProvider = authenticationStateProvider;
     }
 
     [EffectMethod]
     public async Task HandleLoginSubmitAction(LoginSubmitAction action, IDispatcher dispatcher)
     {
-        var result = await _usersService.LoginUser(action.LoginDto);
+        var result = await _authenticationStateProvider.Login(action.LoginDto);
 
         result.Switch(
-            dto => dispatcher.Dispatch(new LoginSuccessAction(dto)),
+            user =>
+            {
+                dispatcher.Dispatch(new LoginSuccessAction(user));
+                dispatcher.Dispatch(new UserLoggedInAction(
+                    Email: user.Email,
+                    DisplayName: user.DisplayName,
+                    Roles: user.Roles));
+            },
             error => dispatcher.Dispatch(new LoginFailureAction(error)));
     }
 }
 
-public record LoginSuccessAction(LoginReturnDto LoginReturnDto);
+public record LoginSuccessAction(User User);
 public record LoginFailureAction(ApiErrorResponse ApiErrorResponse);
 public record LoginSubmitAction(LoginDto LoginDto);

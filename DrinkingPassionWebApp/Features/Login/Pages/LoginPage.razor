@@ -3,8 +3,26 @@
 @using DrinkingPassionWebApp.Features.Login.Store
 @inherits FluxorComponent
 
-<MudForm @ref="Form">
-    <MudTextField T="string" Label="Adres email" @bind-Value="Model.Email" />
-    <MudTextField T="string" Label="Hasło" InputType="InputType.Password" @bind-Value="Model.Password" />
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => SubmitForm())">Zaloguj się</MudButton>
-</MudForm>
+<MudGrid Class="d-flex justify-center">
+    <MudItem xs="12" sm="7">
+        <MudText Typo="Typo.h5" Color="Color.Primary">Logowanie</MudText>
+        <MudForm @ref="Form">
+            <MudTextField T="string" Label="Adres email" @bind-Value="Model.Email" />
+            <MudTextField T="string" Label="Hasło" InputType="InputType.Password" @bind-Value="Model.Password" />
+            <MudButton Disabled="@LoginState.Value.IsSending"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       OnClick="@(() => SubmitForm())"
+                       Class="my-4">
+                @if (LoginState.Value.IsSending)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                }
+                else
+                {
+                    <MudText>Zaloguj się</MudText>
+                }
+            </MudButton>
+        </MudForm>
+    </MudItem>
+</MudGrid>
