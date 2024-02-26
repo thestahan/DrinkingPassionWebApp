@@ -23,6 +23,12 @@
                     <MudText>Zaloguj się</MudText>
                 }
             </MudButton>
+            @if (LoginState.Value.IsError)
+            {
+                <MudAlert Severity="Severity.Error" Elevation="0" Icon="Icons.Error">
+                    Błąd logowania: @LoginState.Value.ErrorMessage
+                </MudAlert>
+            }
         </MudForm>
     </MudItem>
 </MudGrid>
