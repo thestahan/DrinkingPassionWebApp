@@ -69,7 +69,7 @@ public class PublicCocktailsEffects
     {
         try
         {
-            var paginatedCocktails = await _cocktailsService.GetPublicCocktailsAsync(action.PageIndex);
+            var paginatedCocktails = await _cocktailsService.GetPublicCocktails(action.PageIndex);
 
             dispatcher.Dispatch(new FetchPublicCocktailsSuccessAction(paginatedCocktails!));
         }

@@ -2,6 +2,7 @@
 using DrinkingPassionWebApp.Features.Login.Dtos;
 using DrinkingPassionWebApp.Shared;
 using Fluxor;
+using Microsoft.AspNetCore.Components;
 
 namespace DrinkingPassionWebApp.Features.Login.Store;
 
@@ -57,10 +58,14 @@ public static class LoginReducers
 public class LoginEffects
 {
     private readonly DrinkingPassionAuthenticationStateProvider _authenticationStateProvider;
+    private readonly NavigationManager _navigationManager;
 
-    public LoginEffects(DrinkingPassionAuthenticationStateProvider authenticationStateProvider)
+    public LoginEffects(
+        DrinkingPassionAuthenticationStateProvider authenticationStateProvider,
+        NavigationManager navigationManager)
     {
         _authenticationStateProvider = authenticationStateProvider;
+        _navigationManager = navigationManager;
     }
 
     [EffectMethod]
@@ -76,8 +81,13 @@ public class LoginEffects
                     Email: user.Email,
                     DisplayName: user.DisplayName,
                     Roles: user.Roles));
+
+                _navigationManager.NavigateTo("/");
             },
-            error => dispatcher.Dispatch(new LoginFailureAction(error)));
+            error =>
+            {
+                dispatcher.Dispatch(new LoginFailureAction(error));
+            });
     }
 }
 
