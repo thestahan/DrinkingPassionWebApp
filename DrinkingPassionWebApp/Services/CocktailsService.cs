@@ -14,14 +14,14 @@ public class CocktailsService : ICocktailsService
         _httpClient = httpClient;
     }
 
-    public async Task<CocktailDetails?> GetCocktailDetailsAsync(int id)
+    public async Task<CocktailDetails?> GetCocktailDetails(int id)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, $"api/cocktails/{id}");
 
         return await _httpClient.GetFromJsonAsync<CocktailDetails>(request.RequestUri!.ToString());
     }
 
-    public async Task<Pagination<CocktailDto>?> GetPublicCocktailsAsync(int pageIndex)
+    public async Task<Pagination<CocktailDto>?> GetPublicCocktails(int pageIndex)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, $"api/cocktails/public?pageIndex={pageIndex}");
 

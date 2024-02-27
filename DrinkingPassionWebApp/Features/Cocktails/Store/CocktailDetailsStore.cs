@@ -1,6 +1,6 @@
 ﻿using DrinkingPassionWebApp.Features.Cocktails.Dtos;
+using DrinkingPassionWebApp.Services.Interfaces;
 using Fluxor;
-using System.Net.Http.Json;
 
 namespace DrinkingPassionWebApp.Features.Cocktails.Store;
 
@@ -58,17 +58,17 @@ public static class CocktailDetailsReducers
 
 public class CocktailDetailsEffects
 {
-    private readonly HttpClient _httpClient;
+    private readonly ICocktailsService _cocktailsService;
 
-    public CocktailDetailsEffects(HttpClient httpClient) =>
-        _httpClient = httpClient;
+    public CocktailDetailsEffects(ICocktailsService cocktailsService) =>
+        _cocktailsService = cocktailsService;
 
     [EffectMethod]
     public async Task HandleFetchCocktailDetailsAction(FetchCocktailDetailsAction action, IDispatcher dispatcher)
     {
         try
         {
-            var cocktailDetails = await _httpClient.GetFromJsonAsync<CocktailDetails>("https://localhost:5001/api/cocktails/" + action.CocktailId);
+            var cocktailDetails = await _cocktailsService.GetCocktailDetails(action.CocktailId);
 
             dispatcher.Dispatch(new FetchCocktailDetailsSuccessAction(cocktailDetails!));
         }

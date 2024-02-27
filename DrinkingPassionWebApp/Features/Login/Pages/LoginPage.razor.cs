@@ -11,6 +11,8 @@ namespace DrinkingPassionWebApp.Features.Login.Pages;
 
 public partial class LoginPage : FluxorComponent
 {
+    private MudForm _form = default!;
+
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
 
@@ -27,8 +29,6 @@ public partial class LoginPage : FluxorComponent
     public NavigationManager NavigationManager { get; set; } = default!;
 
     public LoginDto Model => LoginState.Value.LoginDto;
-
-    public MudForm Form = default!;
 
     protected override async Task OnInitializedAsync()
     {
